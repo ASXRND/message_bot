@@ -1,9 +1,8 @@
 name: Scheduled Job
 
 on:
-  push:
   schedule:
-    - cron: '43 19 16 9 *'  # Запуск в 19:33 по UTC, 16 сентября
+    - cron: '49 19 16 9 *'  # Запуск в 19:43 по UTC, 16 сентября
 
 env:
   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2  # Исправлено на стабильную версию
+        uses: actions/checkout@v2  # Используем стабильную версию v2
       
       - name: Install Dependencies
         run: pip install -r requirements.txt 
