@@ -1,5 +1,6 @@
 name: Daily Super-Duper Bot
 on:
+  push:
   schedule:
     
      - cron: "03 19 * * 1-5"
