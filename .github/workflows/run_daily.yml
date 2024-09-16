@@ -3,8 +3,7 @@ name: Daily Super-Duper Bot
 
 on:
   schedule:
-  - cron: "16 20 * * 1-5" 
-     
+    - cron: '33 19 16 9 *'  # Запуск в 19:33 по UTC, 16 сентября
 env:
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
     TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
