@@ -1,8 +1,8 @@
 name: Scheduled Job
 
-on:
-  schedule:
-    - cron: '49 19 16 9 *'  # Запуск в 19:43 по UTC, 16 сентября
+on:  
+  schedule:  
+    - cron: "*/15 * * * *" # Каждые 15 минут
 
 env:
   TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
