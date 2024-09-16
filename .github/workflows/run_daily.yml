@@ -1,10 +1,7 @@
 name: Daily Super-Duper Bot
-
 on:
   schedule:
-    - cron: "58 18 * * 1-5"
-
-
+    - cron: "0 19 * * 1-5"
 env:
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
     TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
@@ -19,25 +16,3 @@ jobs:
               run: pip install -r requirements.txt 
             - name: Run App
               run: python app.py
-
-
-#               name: Daily action-on Bot
-
-# on: 
-#   push
-
-# jobs:
-#   Daily-run:
-#     runs-on: ubuntu-latest
-#       teps:
-#         - name: Checkout Code
-#           uses: actions/checkout@
-
-  #  0 9 * * *
-  
-
-# on: 
-#   push
-
-# on: 
-#   workflow_dispatch:      
