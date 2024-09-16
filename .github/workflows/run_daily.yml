@@ -2,16 +2,7 @@ name: Daily Super-Duper Bot
 
 on: 
   schedule:  
-    - cron: '40 17 * * 1'
-
-  #  0 9 * * *
-  
-
-# on: 
-#   push
-
-# on: 
-#   workflow_dispatch:      
+    - cron: '40 17 * * *'
 
 env:
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -39,4 +30,13 @@ jobs:
 #     runs-on: ubuntu-latest
 #       teps:
 #         - name: Checkout Code
-#           uses: actions/checkout@v4
+#           uses: actions/checkout@
+
+  #  0 9 * * *
+  
+
+# on: 
+#   push
+
+# on: 
+#   workflow_dispatch:      
