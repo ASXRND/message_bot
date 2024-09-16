@@ -2,7 +2,7 @@ name: Daily Super-Duper Bot
 
 on: 
   schedule:  
-    - cron: '48 17 16 * *'
+    - cron: '56 17 16 9 *'
 
 env:
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
