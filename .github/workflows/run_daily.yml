@@ -1,6 +1,7 @@
 name: Scheduled Job
 
 on:
+  push:
   schedule:
     - cron: '43 19 16 9 *'  # Запуск в 19:33 по UTC, 16 сентября
 
