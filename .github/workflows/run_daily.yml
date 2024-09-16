@@ -1,9 +1,8 @@
 name: Daily Super-Duper Bot
 
 on: 
-
   schedule:  
-    - cron: '30 17 * * *'
+    - cron: '36 17 * * *'
 
   #  0 9 * * *
   
