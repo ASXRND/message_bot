@@ -5,15 +5,15 @@ import pandas as pd
 from datetime import datetime
 from openmeteo_requests import Client
 import openmeteo_requests
+import requests_cache
 import pandas as pd
 from retry_requests import retry
 from tabulate import tabulate
 from dotenv import load_dotenv
-import openmeteo_requests
-from retry_requests import retry
-from tabulate import tabulate
 
 load_dotenv()
+
+# форматирование таблицы отступы (по ощущениям не работает)
 
 
 def format_numbers(df, column_width=2):
@@ -43,6 +43,10 @@ def get_weather():
     responses = openmeteo.weather_api(url, params=params)
 
     response = responses[0]
+    print(f"Coordinates {response.Latitude()}°N {response.Longitude()}°E")
+    print(f"Elevation {response.Elevation()} m asl")
+    print(f"Timezone {response.Timezone()} {response.TimezoneAbbreviation()}")
+    print(f"Timezone difference to GMT+0 {response.UtcOffsetSeconds()} s")
 
     hourly = response.Hourly()
     hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
@@ -70,7 +74,9 @@ def get_weather():
     table = tabulate(
         hourly_dataframe,
         headers="keys",
+        # tablefmt="pipe",   # Markdown стиль таблицы
         tablefmt="grid",   # Используем формат grid для отображения в коде
+        # numalign="right",  # Выравнивание чисел по правому краю
         stralign="left",   # Выравнивание строк по левому краю
         showindex=False    # Отключаем индексы
     )
@@ -78,51 +84,8 @@ def get_weather():
     return table
 
 
-def get_news_for_telegram():
-    # Ваш API ключ от NewsAPI
-    API_KEY = os.getenv('NEWS_APIKEY')
-
-    # Получаем сегодняшнюю дату в формате 'YYYY-MM-DD'
-    today_date = datetime.today().strftime('%Y-%m-%d')
-
-    # URL для запроса
-    url = 'https://newsapi.org/v2/everything'
-    '2024-09-01'
-
-    # Параметры запроса
-    params = {
-        'q': 'технологии',          # Поиск по ключевому слову
-        'from': '2024-09-15',       # Диапазон поиска
-        'language': 'ru',           # Новости на русском языке
-        'sortBy': 'popularity',     # Сортировка по популярности
-        'apiKey': API_KEY           # Ваш API-ключ
-    }
-
-    # Выполнение запроса
-    response = requests.get(url, params=params)
-
-    # Проверка статуса запроса
-    if response.status_code == 200:
-        news_data = response.json()
-        if news_data['totalResults'] > 0:
-            # Формируем текст для отправки в Telegram
-            telegram_message = ""
-            for i, article in enumerate(news_data['articles'], 1):
-                title = article['title']
-                description = article['description'] or 'Описание отсутствует'
-                url = article['url']
-                telegram_message += f"📰 <b>{i}. {title}</b>\n{
-                    description}\n<a href='{url}'>Читать далее</a>\n\n"
-
-            # Ограничиваем длину до 4000 символов
-            return telegram_message.strip()[:4000]
-        else:
-            return "Нет результатов по данному запросу."
-    else:
-        return f"Ошибка: {response.status_code}"
-
-
 def send_message(message):
+
     TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
     TELEGRAM_CHANNEL_ID = os.getenv('TELEGRAM_CHANNEL_ID')
 
@@ -130,8 +93,7 @@ def send_message(message):
 
     params = {
         'chat_id': TELEGRAM_CHANNEL_ID,
-        'text': message,
-        'parse_mode': 'HTML'  # Указываем HTML, чтобы поддерживать форматирование
+        'text': f'{message}'
     }
 
     res = requests.post(url, params=params)
@@ -141,22 +103,6 @@ def send_message(message):
 
 
 if __name__ == '__main__':
-    news = get_news_for_telegram()  # Получаем новости
-    weather = get_weather()         # Получаем погоду
-
-    # Упрощаем таблицу и делаем её текстом
-    weather_message = f"<b>🌤️ Погода на сегодня:</b>\n{weather}"
-
-    # Проверяем, если новостей нет
-    if not news:
-        news = "Нет свежих новостей на данный момент."
-
-    # Объединяем погоду и новости в одно сообщение
-    combined_message = f"{weather_message}\n\n<b>📰 Новости:</b>\n\n{news}"
-
-    # Ограничиваем размер сообщения (Telegram может ограничивать длину)
-    if len(combined_message) > 4096:
-        combined_message = combined_message[:4093] + "..."
-
-    # Отправляем сообщение в Telegram
-    send_message(combined_message)
+    weather = get_weather()
+    print(weather)
+    send_message(weather)
